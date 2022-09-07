@@ -15,9 +15,14 @@ public class PlayerMoveScript : MonoBehaviour
 
    private Rigidbody _rb = default;
 
+    private Vector3 dir;
 
+    /// <summary>接地判定</summary>
+    private bool isGround;
 
-   [SerializeField]private bool isGround;
+    /// <summary>ブレーキの使用判定</summary>
+/*    [HideInInspector] */public bool isBrake = false;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -26,14 +31,21 @@ public class PlayerMoveScript : MonoBehaviour
 
     void Update()
     {
+        MoveControll();
+
+    }
+
+    private void MoveControll()
+    {
         //移動制御
         float dx = Input.GetAxis("Horizontal");
         float dz = Input.GetAxis("Vertical");
-        var movement = new Vector3(dx, 0, dz);
-        _rb.AddForce(movement * _movePower);
+        dir = new Vector3(dx, 0, dz);
 
         //常に摩擦は０
         _rb.drag = 0;
+        //ブレーキは通常false
+        isBrake = false;
 
         if (isGround == true)//着地しているとき
         {
@@ -47,16 +59,12 @@ public class PlayerMoveScript : MonoBehaviour
         //右クリックでブレーキ
         if (Input.GetButton("Fire1"))
         {
-            Debug.Log("a");
+            isBrake = true;
             _rb.drag = _brakePower;
         }
-        if (Input.GetButtonUp("Fire1"))
-        {
-            Debug.Log("b");
-        }
-
     }
 
+    //接地判定
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag == "Ground") 
@@ -66,10 +74,10 @@ public class PlayerMoveScript : MonoBehaviour
     }
 
 
-    //void FixedUpdate()
-    //{
-    //    // 「力を加える」処理は力学的処理なので FixedUpdate で行うこと
-    //    _rb.AddForce(_dir.normalized * _movePower, ForceMode.Acceleration);
-    //}
+    void FixedUpdate()
+    {
+        // 「力を加える」処理は力学的処理なので FixedUpdate で行う
+        _rb.AddForce(dir * _movePower);
+    }
 
 }
