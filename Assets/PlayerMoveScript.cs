@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class PlayerMoveScript : MonoBehaviour
 {
-    
-    [SerializeField] float _movePower = 3;
-    [SerializeField] float _jumpPower = 3;
+    [Header("各種移動パラメーター")]
+    /// <summary>移動時のパワー</summary>
+    [Tooltip("移動時のパワー"),SerializeField] private  float _movePower = 3;
+    /// <summary>ジャンプパワー</summary>
+    [Tooltip("ジャンプパワー"),SerializeField] private float _jumpPower = 3;
+    /// <summary>ブレーキパワー</summary>
+    [Tooltip("ブレーキパワー"),SerializeField] private float _brakePower = 3;
 
-    Rigidbody _rb = default;
+
+   private Rigidbody _rb = default;
 
 
-    /// <summary>入力された方向の XZ 平面でのベクトル</summary>
-    Vector3 _dir;
 
-    bool isGround;
+   [SerializeField]private bool isGround;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -23,12 +26,14 @@ public class PlayerMoveScript : MonoBehaviour
 
     void Update()
     {
-
+        //移動制御
         float dx = Input.GetAxis("Horizontal");
         float dz = Input.GetAxis("Vertical");
         var movement = new Vector3(dx, 0, dz);
         _rb.AddForce(movement * _movePower);
-        
+
+        //常に摩擦は０
+        _rb.drag = 0;
 
         if (isGround == true)//着地しているとき
         {
@@ -38,6 +43,18 @@ public class PlayerMoveScript : MonoBehaviour
                 _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
             }
         }
+
+        //右クリックでブレーキ
+        if (Input.GetButton("Fire1"))
+        {
+            Debug.Log("a");
+            _rb.drag = _brakePower;
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            Debug.Log("b");
+        }
+
     }
 
     private void OnCollisionEnter(Collision col)
