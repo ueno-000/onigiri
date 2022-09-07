@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PlayerValueScript : MonoBehaviour
+/// <summary>
+/// HPの管理/Sliderの表示/HPに応じたmesh変更
+/// </summary>
+public class PlayerHPScript : MonoBehaviour
 {
-    [SerializeField] private float _hitPoint;
+    /// <summary>体力値</summary>
+    [Tooltip("体力値"),SerializeField] private float _hitPoint;
 
     [SerializeField] private Mesh[] meshes;
     
+
 
     // Start is called before the first frame update
     void Start()
