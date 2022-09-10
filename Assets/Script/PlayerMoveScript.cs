@@ -18,7 +18,7 @@ public class PlayerMoveScript : MonoBehaviour
     private Vector3 dir;
 
     /// <summary>接地判定</summary>
-    private bool isGround;
+    private bool _isGrounded;
 
     /// <summary>ブレーキの使用判定</summary>
 /*    [HideInInspector] */public bool isBrake = false;
@@ -31,8 +31,19 @@ public class PlayerMoveScript : MonoBehaviour
 
     void Update()
     {
-        MoveControll();
+        //常に摩擦は０
+        _rb.drag = 0;
+        //ブレーキは通常false
+        isBrake = false;
 
+        if (Input.GetButton("Fire1"))
+        {
+            _rb.drag = _brakePower;
+            isBrake = true;
+        }
+
+        MoveControll();
+   
     }
 
     private void MoveControll()
@@ -42,16 +53,18 @@ public class PlayerMoveScript : MonoBehaviour
         float dz = Input.GetAxis("Vertical");
         dir = new Vector3(dx, 0, dz);
 
+        dir = Camera.main.transform.TransformDirection(dir);
+
         //常に摩擦は０
         _rb.drag = 0;
         //ブレーキは通常false
         isBrake = false;
 
-        if (isGround == true)//着地しているとき
+        if (_isGrounded == true)//着地しているとき
         {
             if (Input.GetButtonDown("Jump"))
             {
-                isGround = false;//  isGroundをfalseにする
+                _isGrounded = false;//  isGroundをfalseにする
                 _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
             }
         }
@@ -69,7 +82,7 @@ public class PlayerMoveScript : MonoBehaviour
     {
         if (col.gameObject.tag == "Ground") 
         {
-            isGround = true; 
+            _isGrounded = true; 
         }
     }
 
