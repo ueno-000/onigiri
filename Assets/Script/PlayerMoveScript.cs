@@ -18,6 +18,7 @@ public class PlayerMoveScript : MonoBehaviour
     private Vector3 dir;
 
     /// <summary>接地判定</summary>
+    [SerializeField]
     private bool _isGrounded;
 
     /// <summary>ブレーキの使用判定</summary>
@@ -62,10 +63,13 @@ public class PlayerMoveScript : MonoBehaviour
 
         if (_isGrounded == true)//着地しているとき
         {
-            if (Input.GetButtonDown("Jump"))
+            // 垂直方向の速度を計算する
+            float y = _rb.velocity.y;
+
+            if (Input.GetButtonDown("Jump") && _isGrounded)
             {
-                _isGrounded = false;//  isGroundをfalseにする
-                _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
+                y = _jumpPower;
+                _rb.velocity =/* dir * _jumpPower +*/ Vector3.up * y;
             }
         }
 
@@ -83,6 +87,13 @@ public class PlayerMoveScript : MonoBehaviour
         if (col.gameObject.tag == "Ground") 
         {
             _isGrounded = true; 
+        }
+    }
+    private void OnCollisionExit(Collision col)
+    {
+        if (col.gameObject.tag == "Ground")
+        {
+            _isGrounded = false;
         }
     }
 
