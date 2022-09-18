@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// HPの管理/Sliderの表示/HPに応じたmesh変更
 /// </summary>
-public class PlayerHPScript : MonoBehaviour
+public class PlayerHPScript : MonoBehaviour,IDamage
 {
     /// <summary>体力値</summary>
     [Tooltip("体力値"),SerializeField] private float _hitPoint = 100;
@@ -66,5 +66,10 @@ public class PlayerHPScript : MonoBehaviour
         {
             _mesh.mesh = meshes[2];
         }
+    }
+
+    public void Damage(float value)
+    { 
+        _hitPoint -= value;
     }
 }

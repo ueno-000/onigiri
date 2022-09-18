@@ -6,12 +6,12 @@ using UnityEngine;
 /// </summary>
 public class FallDamageScript : MonoBehaviour
 {
-    //　レイを飛ばす場所
-    [SerializeField]
-    private Transform _target;
+    //　レイを飛ばす場所(PLayer)
+    private Transform _playerRayPos;
+
     //　レイを飛ばす距離
     [SerializeField]
-    private float rayRange = 0.85f;
+    private float _rayRange = 0.85f;
 
     /// <summary>落下ダメージ</summary>
     [SerializeField] private float _damage = 5;
@@ -31,6 +31,7 @@ public class FallDamageScript : MonoBehaviour
 
     void Start()
     {
+        _playerRayPos = this.gameObject.transform;
         _fallDamageDistance = 0f;
         _fallPosition = transform.position.y;
         isFall = false;
@@ -39,7 +40,7 @@ public class FallDamageScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawLine(_target.position, _target.position + Vector3.down * rayRange, Color.blue);
+        Debug.DrawLine(_playerRayPos.position, _playerRayPos.position + Vector3.down * _rayRange, Color.blue);
 
 
         //　落ちている状態
@@ -51,7 +52,7 @@ public class FallDamageScript : MonoBehaviour
             //Debug.Log(_fallPosition);
 
             //　地面にレイが届いていたら
-            if (Physics.Linecast(_target.position, _target.position + Vector3.down * rayRange, LayerMask.GetMask("Field", "Player")))
+            if (Physics.Linecast(_playerRayPos.position, _playerRayPos.position + Vector3.down * _rayRange, LayerMask.GetMask("Field", "Player")))
             {
                 //　落下距離を計算
                 _fallDistance = _fallPosition - transform.position.y;
@@ -60,6 +61,9 @@ public class FallDamageScript : MonoBehaviour
                 {
                     //myHp.TakeDamage((int)(fallenDistance - _fallDamageDistance));
                     Debug.Log("aaa");
+                     _playerRayPos.gameObject.GetComponent<IDamage>().Damage(_damage);
+
+
                 }
                 isFall = false;
             }
@@ -67,7 +71,7 @@ public class FallDamageScript : MonoBehaviour
         else
         {
             //　地面にレイが届いていなければ落下地点を設定
-            if (!Physics.Linecast(_target.position, _target.position + Vector3.down * rayRange, LayerMask.GetMask("Field", "Player")))
+            if (!Physics.Linecast(_playerRayPos.position, _playerRayPos.position + Vector3.down * _rayRange, LayerMask.GetMask("Field", "Player")))
             {
                 //　最初の落下地点を設定
                 _fallPosition = transform.position.y;
