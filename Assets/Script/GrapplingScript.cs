@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// グラップリングアクション
+/// </summary>
 public class GrapplingScript : MonoBehaviour
 {
     [SerializeField] private Rigidbody _target;
@@ -20,5 +22,13 @@ public class GrapplingScript : MonoBehaviour
     void Update()
     {
         _sj.connectedBody = _target;
+
+        if (_target != null)
+        {
+            if (Input.GetButtonDown("Fire2"))
+            {
+                _target = null;
+            }
+        }
     }
 }
