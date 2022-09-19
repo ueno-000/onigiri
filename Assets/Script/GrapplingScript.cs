@@ -11,14 +11,12 @@ public class GrapplingScript : MonoBehaviour
     private SpringJoint _sj;
     private LineRenderer _lineRenderer;
 
-    private Vector3 _player;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _sj = GetComponent<SpringJoint>();
         _lineRenderer = GetComponent<LineRenderer>();
-        _player = this.gameObject.transform.position;
     }
 
     // Update is called once per frame
@@ -26,7 +24,8 @@ public class GrapplingScript : MonoBehaviour
     {
         _sj.connectedBody = _target;
 
-
+        _lineRenderer.SetPosition(0, this.gameObject.transform.position);
+        _lineRenderer.SetPosition(1,this.gameObject.transform.position);
 
         if (_target != null)
         {
@@ -35,8 +34,8 @@ public class GrapplingScript : MonoBehaviour
                 _target = null;
             }
 
-            _lineRenderer.SetPosition(0, _player);
-            _lineRenderer.SetPosition(1, _target);
+            _lineRenderer.SetPosition(0, this.gameObject.transform.position);
+            _lineRenderer.SetPosition(1, _target.gameObject.transform.position);
         }
     }
 }
