@@ -12,12 +12,13 @@ public class GrapplingScript : MonoBehaviour
 
     void Start()
     {
-        
+        _rb = GetComponent<Rigidbody>();
+        _sj = GetComponent<SpringJoint>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        _sj.connectedBody = _target;
     }
 }
