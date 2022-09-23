@@ -32,7 +32,7 @@ public class FallDamageScript : MonoBehaviour
     void Start()
     {
         _playerRayPos = this.gameObject.transform;
-        _fallDamageDistance = 0f;
+        _fallDamageDistance = 5f;
         _fallPosition = transform.position.y;
         isFall = false;
     }
