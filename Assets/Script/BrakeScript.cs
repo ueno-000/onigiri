@@ -24,6 +24,7 @@ public class BrakeScript : MonoBehaviour
     {
         _moveScript = _moveScript.gameObject.GetComponent<PlayerMoveScript>();
         _time = _brakeTime;
+
     }
 
     // Update is called once per frame
@@ -40,6 +41,7 @@ public class BrakeScript : MonoBehaviour
             if (_time <=  0)
             {
                 Debug.Log("PLAYER:DED");
+                _moveScript.gameObject.GetComponent<IDamage>().Damage(10);
             }
         }
 
