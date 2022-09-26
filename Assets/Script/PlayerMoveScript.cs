@@ -12,7 +12,6 @@ public class PlayerMoveScript : MonoBehaviour
     /// <summary>ブレーキパワー</summary>
     [Tooltip("ブレーキパワー"),SerializeField] private float _brakePower = 3;
 
-
    private Rigidbody _rb = default;
 
     private Vector3 dir;
@@ -23,7 +22,6 @@ public class PlayerMoveScript : MonoBehaviour
 
     /// <summary>ブレーキの使用判定</summary>
 /*    [HideInInspector] */public bool isBrake = false;
-
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -32,10 +30,6 @@ public class PlayerMoveScript : MonoBehaviour
 
     void Update()
     {
-        //常に摩擦は０
-        _rb.drag = 0;
-        //ブレーキは通常false
-        isBrake = false;
 
         if (Input.GetButton("Fire1"))
         {
@@ -52,12 +46,17 @@ public class PlayerMoveScript : MonoBehaviour
         //移動制御
         float dx = Input.GetAxis("Horizontal");
         float dz = Input.GetAxis("Vertical");
-        dir = new Vector3(dx, 0, dz);
 
-        dir = Camera.main.transform.TransformDirection(dir);
+        var horizontalRoration = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+
+
+        dir = horizontalRoration * new Vector3(dx, 0, dz)/*.normalized*/;
+
+     //  dir = Camera.main.transform.TransformDirection(dir);
+
 
         //常に摩擦は０
-        _rb.drag = 0;
+        _rb.drag = 1;
         //ブレーキは通常false
         isBrake = false;
 
@@ -69,7 +68,7 @@ public class PlayerMoveScript : MonoBehaviour
             if (Input.GetButtonDown("Jump") && _isGrounded)
             {
                 y = _jumpPower;
-                _rb.velocity =/* dir * _jumpPower +*/ Vector3.up * y;
+                _rb.velocity = Vector3.up * y;
             }
         }
 
@@ -77,23 +76,33 @@ public class PlayerMoveScript : MonoBehaviour
         if (Input.GetButton("Fire1"))
         {
             isBrake = true;
-            _rb.drag = _brakePower;
+            _rb.drag += _brakePower;
         }
     }
 
     //接地判定
     private void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Ground") 
+        if (col.gameObject.tag == "Ground" || col.gameObject.tag == "Move") 
         {
             _isGrounded = true; 
+        }
+
+        if (col.gameObject.tag == "Move")
+        {
+            transform.SetParent(col.transform);
         }
     }
     private void OnCollisionExit(Collision col)
     {
-        if (col.gameObject.tag == "Ground")
+        if (col.gameObject.tag == "Ground" || col.gameObject.tag == "Move")
         {
             _isGrounded = false;
+        }
+
+        if (col.gameObject.tag == "Move")
+        {
+            transform.SetParent(null);
         }
     }
 
