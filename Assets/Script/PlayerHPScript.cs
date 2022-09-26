@@ -19,6 +19,8 @@ public class PlayerHPScript : MonoBehaviour,IDamage
     /// <summary>Slider</summary>
     [SerializeField] private Slider _slider;
 
+    [SerializeField] RespawnScript _respawnScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,9 @@ public class PlayerHPScript : MonoBehaviour,IDamage
 
         _slider = _slider.gameObject.GetComponent<Slider>();
         _slider.maxValue = _maxHitPoint;
+
+        _respawnScript = _respawnScript.gameObject.GetComponent<RespawnScript>();
+    
     }
 
     // Update is called once per frame
@@ -41,12 +46,16 @@ public class PlayerHPScript : MonoBehaviour,IDamage
         if (_hitPoint <= 0)
         {
             Debug.Log("PLAYER:DED");
+            _respawnScript.Respawn();
+            _hitPoint = _maxHitPoint;
         }
     }
 
     private void UpdateSlider()
     {
         _slider.value = _hitPoint;
+
+
     }
 
     /// <summary>
