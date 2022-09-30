@@ -12,7 +12,11 @@ public class PlayerMoveScript : MonoBehaviour
     /// <summary>ブレーキパワー</summary>
     [Tooltip("ブレーキパワー"),SerializeField] private float _brakePower = 3;
 
-   private Rigidbody _rb = default;
+
+    [Header("アタッチするもの")]
+    /// <summary>アニメーションコンポーネント</summary>
+    [SerializeField] private Animation _anim;
+    private Rigidbody _rb = default;
 
     private Vector3 dir;
 
@@ -21,10 +25,13 @@ public class PlayerMoveScript : MonoBehaviour
     private bool _isGrounded;
 
     /// <summary>ブレーキの使用判定</summary>
-/*    [HideInInspector] */public bool isBrake = false;
+    [HideInInspector]public bool isBrake = false;
+
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _anim = _anim.gameObject.GetComponent<Animation>();
     }
 
 
@@ -111,6 +118,8 @@ public class PlayerMoveScript : MonoBehaviour
     {
         // 「力を加える」処理は力学的処理なので FixedUpdate で行う
         _rb.AddForce(dir * _movePower);
+
+        
     }
 
 }
